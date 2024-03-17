@@ -1,4 +1,4 @@
-export const savelocalStorage = (pkmn: any) => {
+export const savelocalStorage = (pkmn: string) => {
     let favorites = getlocalStorage();
 
     if (!favorites.includes(pkmn)) {
@@ -15,7 +15,7 @@ export const getlocalStorage = () => {
     return JSON.parse(localStorageData);
 
 }
-export const removeFromLocalStorage = (pkmn: any) => {
+export const removeFromLocalStorage = (pkmn: string) => {
     let favories = getlocalStorage();
 
     let namedIndex = favories.indexOf(pkmn);

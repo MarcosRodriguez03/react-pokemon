@@ -6,34 +6,112 @@ import { savelocalStorage, getlocalStorage, removeFromLocalStorage } from "../ut
 
 import emptyHeart from '../../assets/emptyHeart.png'
 import fullHeart from '../../assets/fullHeart.png'
-
-
-
-
-
-
-
+import x from '../../assets/xSymbol.png'
 
 const HomePageComponent = () => {
-
-
-
     const [pokemon, setPokemon] = useState<Ipokemon>(pokeDefault);
-    const [inputPoke, setInputPoke] = useState<string>("rowlet"); //this hold the pokemon entered
-    const [inputPokeOnChange, setInputPokeOnChange] = useState<string>("rowlet");
-    const [location, setLocation] = useState<any>("")
+    const [inputPoke, setInputPoke] = useState<string>("victini"); //this hold the pokemon entered
+    const [inputPokeOnChange, setInputPokeOnChange] = useState<string>("victini");
+    const [location, setLocation] = useState<string>()
 
-    const [moves, setMoves] = useState<any>([])
-    const [evos, setEvos] = useState<any>([])
-    const [abilArr, setAbilArr] = useState<any>([])
-    const [typeUse, setTypeUse] = useState<any>([])
-    const [evoObject2, setEvoObject2] = useState<any>()
+    const [moves, setMoves] = useState<string[]>([])
+    const [evos, setEvos] = useState<string[]>([])
+    const [abilArr, setAbilArr] = useState<string[]>([])
+    const [typeUse, setTypeUse] = useState<string[]>([])
+    const [evoObject2, setEvoObject2] = useState<string[]>([])
 
-    const [localStor, setLocalStor] = useState<any>();
-    const [bool1, setBool1] = useState<any>(false);
+    const [localStor, setLocalStor] = useState<string[]>([]);
+    const [bool1, setBool1] = useState<boolean>(false);
 
     const [isVisible, setIsVisible] = useState(true); // State to track visibility
-    const [heart, setHeart] = useState<any>();
+    const [heart, setHeart] = useState<string>();
+    const [isShiny, setIsShiny] = useState(true);
+    const [bgColor, setBgColor] = useState("string")
+
+
+    const determineBg = (type: string) => {
+        switch (type) {
+            case "fire":
+                setBgColor("bg-yellow-500");
+                break;
+
+            case "bug":
+                setBgColor("bg-green-500");
+                break;
+
+            case "dark":
+                setBgColor("bg-gray-700");
+                break;
+
+            case "dragon":
+                setBgColor("bg-indigo-500");
+                break;
+
+            case "electric":
+                setBgColor("bg-yellow-300");
+                break;
+
+            case "fighting":
+                setBgColor("bg-red-500");
+                break;
+
+            case "flying":
+                setBgColor("bg-blue-300");
+                break;
+
+            case "ghost":
+                setBgColor("bg-purple-500");
+                break;
+
+            case "grass":
+                setBgColor("bg-green-300");
+                break;
+
+            case "ground":
+                setBgColor("bg-yellow-600");
+                break;
+
+            case "ice":
+                setBgColor("bg-blue-200");
+                break;
+
+            case "normal":
+                setBgColor("bg-gray-400");
+                break;
+
+            case "poison":
+                setBgColor("bg-purple-400");
+                break;
+
+            case "psychic":
+                setBgColor("bg-pink-500");
+                break;
+
+            case "rock":
+                setBgColor("bg-yellow-700");
+                break;
+
+            case "steel":
+                setBgColor("bg-gray-500");
+                break;
+
+            case "water":
+                setBgColor("bg-blue-500");
+                break;
+
+            case "fairy":
+                setBgColor("bg-pink-200");
+                break;
+
+            default:
+                setBgColor("");
+                break;
+        }
+    };
+    const toggleShiny = () => {
+        setIsShiny(!isShiny);
+    };
+
 
     const determineHeart = () => {
         let localStor = getlocalStorage()
@@ -70,19 +148,14 @@ const HomePageComponent = () => {
     }
 
     const handleAdd = (para: string): void => {
-        let locals: any = getlocalStorage();
+        let locals: string[] = getlocalStorage();
 
         if (locals.includes(para)) {
             removeFromLocalStorage(para)
-
         } else {
             savelocalStorage(para)
         }
-
-
     }
-
-
 
     const EnterClick = () => {
         setInputPoke(inputPokeOnChange)
@@ -93,9 +166,16 @@ const HomePageComponent = () => {
 
         const FetchFirstApi = async () => {
             const fetchedData = await FetchPokemon(inputPoke)
+
+            if (fetchedData.id > 649) {
+                return alert("This pokedex only goes up to Gen V")
+            }
+
             setPokemon(fetchedData)
             console.log(fetchedData)
             determineHeartOnLoad(fetchedData.name)
+            determineBg(fetchedData.types[0].type.name)
+
 
             const area = await fetchArea(fetchedData.id)
 
@@ -109,12 +189,6 @@ const HomePageComponent = () => {
             } catch (error) {
                 setLocation("N/A")
             }
-
-
-
-
-
-
             //evo chain
             const species = await fetchSpecies(fetchedData.id)
             console.log(species.evolution_chain.url)
@@ -156,8 +230,6 @@ const HomePageComponent = () => {
                 test.push(picSrc.sprites.other['official-artwork'].front_default)
             }
             setEvoObject2(test)
-
-
         }
         FetchFirstApi()
     }, [inputPoke]) // trigger needed run the useeffect
@@ -165,27 +237,18 @@ const HomePageComponent = () => {
     useEffect(() => {
         let getLocal = getlocalStorage()
         setLocalStor(getLocal)
-
-
-
     }, [bool1])
 
 
     return (
-        <div className="bg-[#FFBE8E]">
-
-
-
-
-
-
+        <div className={bgColor}>
             {/* navbar */}
             <div className="flex justify-center">
                 <div
                     className="px-[25px] lg:px-0 max-w-[1720px] w-[1720px] lg:flex lg:flex-row gap-x-12 lg:gap-x-6 md:grid md:grid-cols-3 mt-25px md:mt-[50px] lg:mt-[100px] mb-25px md:mb-[50px]">
                     <input id="inputBox" className=" h-[60px] w-full md:col-span-3 lg:w-[400px] mt-[25px] md:mt-0 customText"
                         type="text "
-                        onChange={(e: any) => setInputPokeOnChange(e.target.value)} onKeyDown={(e: any) => e.key === 'Enter' ? setInputPoke(e.target.value) : null}
+                        onChange={(e) => setInputPokeOnChange(e.target.value)} onKeyDown={(e: any) => e.key === 'Enter' ? setInputPoke(e.target.value) : null}
                     />
 
                     <div id="searchBtn"
@@ -220,21 +283,25 @@ const HomePageComponent = () => {
                     <div
                         className="rounded-[15px] bg-white grid grid-cols-1 lg:grid-cols-2 gap-y-6 md:gap-y-12 lg:gap-12 p-[25px] md:p-[50px]">
                         <div id="background2"
-                            className="order-1 lg:order-none rounded-[15px] bg-[#FFBE8E] w-full sm:min-h-[655px] sm:h-auto flex justify-center items-center">
-                            <img id="coverPic" className=" w-[500px] h-auto" src={pokemon.sprites.other['official-artwork'].front_default} alt="current pkmn" />
+                            className={`order-1 lg:order-none rounded-[15px] w-full sm:min-h-[655px] sm:h-auto flex justify-center items-center ${bgColor}`}
+
+                        >
+                            {isShiny == true && <img id="coverPic" className=" w-[500px] h-auto" src={pokemon.sprites.other['official-artwork'].front_default} alt="current pkmn" onClick={() => toggleShiny()} />}
+                            {isShiny == false && <img id="coverPic" className=" w-[500px] h-auto" src={pokemon.sprites.other['official-artwork'].front_shiny} alt="current pkmn" onClick={() => toggleShiny()} />}
+
                         </div>
 
                         <div className="order-3 rounded-[15px] lg:order-none bg-[#EEEEEE] min-h-44 lg:h-auto lg:row-span-2 w-full ">
                             <div className="px-[25px] py-[50px]">
                                 <div className="customText">
-                                    <p>{location}</p>
-                                    <p id="locationText"></p>
+                                    <p>Location:</p>
+                                    <p id="locationText">{location} </p>
                                 </div>
                                 <div className="customText py-[25px] lg:py-[50px] ">
                                     <p>Moves:</p>
                                     <div className="overflowBox">
                                         <p id="moveText">  {
-                                            moves.map((ele: any) => {
+                                            moves.map((ele: string) => {
                                                 return <span
                                                     className='customText'
                                                     key={ele}>{ele}, </span>
@@ -247,7 +314,7 @@ const HomePageComponent = () => {
                                     <p>Abilities:</p>
                                     <div className="overflowBox">
                                         <p id="AbilitiesText">  {
-                                            abilArr.map((ele: any) => {
+                                            abilArr.map((ele: string) => {
                                                 return <span key={ele}>{ele}, </span>
                                             })
                                         }</p>
@@ -270,15 +337,13 @@ const HomePageComponent = () => {
                             <div className="flex flex-row gap-x-6 items-center" id="injectHere">
                                 <p id="pkmnType" className="customText">Type/s </p>
                                 {
-                                    typeUse.map((ele: any) => {
+                                    typeUse.map((ele: string) => {
 
                                         return <img className='md:w-[120px] md:h-[40px] w-[75px] h-[25px]' src={determineType(ele)} alt="type" />
 
 
                                     })
                                 }
-
-
 
                             </div>
                         </div>
@@ -290,7 +355,7 @@ const HomePageComponent = () => {
 
                                 {/*  */}
                                 {
-                                    evoObject2 && evoObject2.map((ele: any) => {
+                                    evoObject2.map((ele: string) => {
                                         return <div className=" flex justify-center items-center ">
                                             <img className="w-[300px] h-[300px]" alt='evo imgs' src={ele} />
                                         </div>
@@ -306,57 +371,30 @@ const HomePageComponent = () => {
 
             <div className={`toggle-div ${isVisible ? 'visible' : 'hidden'}`}>
 
-                <div className="left-div ">
+                <div className="left-div p-[30px]">
+                    <div className='flex justify-end'>
+                        <img src={x} className='w-[30px] h-[30px]' alt="close button" onClick={() => toggleVisibility()} />
+                    </div>
                     {
-                        localStor && localStor.map((ele: any) => {
+                        localStor && localStor.map((ele: string) => {
                             return <div >
-                                <h1 key={ele} onClick={() => { setInputPoke(ele); toggleVisibility() }}> {ele}</h1>
+                                <div className='px-[25px]  bg-white rounded-[15px] py-[35px] flex justify-between  items-center mt-[25px]'>
 
-                                <h1 onClick={() => { removeFromLocalStorage(ele); handleSwitch(); toggleVisibility(); determineHeart() }}> remove</h1>
+                                    <p
+                                        key={ele} onClick={() => { setInputPoke(ele); toggleVisibility() }}
+                                        className=' ml-[30%] text-center customText text-black'> {ele}</p>
+
+                                    <button
+                                        onClick={() => { removeFromLocalStorage(ele); handleSwitch(); toggleVisibility(); determineHeart() }}
+                                        className='w-[50px] h-[50px] text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 pl-[40px] dark:hover:bg-gray-600 dark:hover:text-white mr-[5%]
+                                '>X</button>
+
+                                </div>
                             </div>
                         })
                     }
                 </div>
             </div>
-
-
-            {/* <input id='inputBox' onChange={(e: any) => setInputPokeOnChange(e.target.value)} onKeyDown={(e: any) => e.key === 'Enter' ? setInputPoke(e.target.value) : null}
-             
-                /> */}
-
-            {/* <button
-                className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => EnterClick()}>
-                Button
-            </button> */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         </div>

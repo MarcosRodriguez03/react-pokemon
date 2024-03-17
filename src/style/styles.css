@@ -22,32 +22,14 @@
     padding: 5px;
 }
 
-@media (min-width: 768px) {
-    .customText {
-        font-size: 34px;
-        font-family: "Lalezar", system-ui;
-    }
-
-    .customText2 {
-        font-size: 30px;
-        font-family: "Lalezar", system-ui;
-    }
-}
 
 .left-div {
-    width: 35%;
+    width: 70%;
     height: 100vh;
-    /* Set the height to 100% of the viewport height */
     position: fixed;
-    /* Fixed positioning to keep it in place */
     top: 0;
-    /* Align it to the top of the page */
     left: 0;
-    /* Align it to the left side of the page */
-    background-color: #f0f0f0;
-    /* Background color for the left div */
-    /* Add any additional styling you want */
-
+    background-color: #f0f0f0e2;
 }
 
 .toggle-div {
@@ -65,4 +47,25 @@
 .hidden {
     display: block;
     /* Hide the div */
+}
+
+@media (min-width: 768px) {
+    .customText {
+        font-size: 34px;
+        font-family: "Lalezar", system-ui;
+    }
+
+    .customText2 {
+        font-size: 30px;
+        font-family: "Lalezar", system-ui;
+    }
+
+    .left-div {
+        width: 35%;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #f0f0f0e2;
+    }
 }

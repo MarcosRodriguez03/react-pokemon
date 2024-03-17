@@ -1,4 +1,4 @@
-import { Ipokemon } from "../Interefaces/Interface"
+import { Ipokemon, EvolutionChain, IEncounter } from "../Interefaces/Interface"
 import HomePageComponent from "../Pages/HomePageComponent"
 import fire from '../../assets/fire.png'
 import bug from '../../assets/BugIC_Big.png'
@@ -28,24 +28,24 @@ export const FetchPokemon = async (putPoke: string) => {
     const data: Ipokemon = await promise.json()
     return data
 }
-export const FetchEvo = async (id: any) => {
+export const FetchEvo = async (id: string) => {
     const promise = await fetch(`https://pokeapi.co/api/v2/evolution-chain/${id}/`)
-    const data: any = await promise.json()
+    const data: EvolutionChain = await promise.json()
     return data
 }
-export const fetchArea = async (putPoke2: any) => {
+export const fetchArea = async (putPoke2: number) => {
     const promise = await fetch(`https://pokeapi.co/api/v2/pokemon/${putPoke2}/encounters`)
-    const data: any = await promise.json()
+    const data = await promise.json()
     return data
 }
 
-export const fetchSpecies = async (putPoke2: any) => {
+export const fetchSpecies = async (putPoke2: number) => {
     const promise = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${putPoke2}`)
-    const data: any = await promise.json()
+    const data = await promise.json()
     return data
 }
 
-export const evoTree = (word2: any) => {
+export const evoTree = (word2: EvolutionChain) => {
     evoArr = [];
     evoArr.push(word2.chain.species.name)
     if (word2.chain.evolves_to.length > 0) {
@@ -71,12 +71,12 @@ export const evoTree = (word2: any) => {
 }
 
 export function randomNumGen() {
-    let rndm = Math.floor(Math.random() * 151) + 1;
+    let rndm = Math.floor(Math.random() * 659) + 1;
     return rndm.toString()
 }
 
 
-export const determineType = (type: any) => {
+export const determineType = (type: string) => {
     switch (type) {
         case "fire":
             return fire;
@@ -115,6 +115,6 @@ export const determineType = (type: any) => {
         case "fairy":
             return fairy;
         default:
-            return ""; // Default return value if type is not found
+            return "";
     }
 }
